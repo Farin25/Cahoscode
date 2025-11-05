@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaosCode - Random Chaos Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <div class="content">
+        <h1 class="überschrift">Random Chaos Generator</h1>
+        <h2 class="unterschrift">Click to unleash some chaos!</h2>
+        <button class="generate-btn" onclick="generateChaos()">Generate</button>
+        <div id="chaos-output"></div>
+    </div>
+
+    <script>
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+        const subjects = [
+  "An Elephant", "Your Neighbor", "A Cat", "A UFO", "The Moon", "A Dog", "A Pirate", "A Robot", 
+  "A Unicorn", "A Mermaid", "A Ghost", "A Wizard", "A Vampire", "A Giant", "A Butterfly", 
+  "A Shark", "A Dinosaur", "A Giraffe", "A Dragon", "A Space Alien", "A Parrot", "A Wizard's Hat",
+  "A Superhero", "A Snowman", "A Fairy", "A Zombie", "A Reindeer", "A Werewolf"
+];
+
+const actions = [
+  "dances breakdance", "sings operas", "cooks spaghetti", "flies backwards", "paints a picture", 
+  "plays chess", "solves a Rubik's Cube", "does a backflip", "writes poetry", "plays the piano", 
+  "juggles flaming torches", "skips rope", "does yoga", "builds a sandcastle", "takes a nap", 
+  "teaches a dance class", "bakes cookies", "runs a marathon", "plays a guitar solo", "rides a bike", 
+  "saves the world", "hugs a tree", "climbs a mountain", "fights dragons", "dances salsa", "throws a pizza dough"
+];
+
+const locations = [
+  "on your roof", "in the supermarket", "under your bed", "in space", "in a tree", 
+  "on the moon", "in a haunted house", "at the zoo", "in a library", "on top of a skyscraper", 
+  "on a rollercoaster", "in a spaceship", "at a concert", "on a pirate ship", "underwater", 
+  "at the North Pole", "in a cave", "on a rainbow", "at a beach party", "in a candy factory", 
+  "in a wizard's tower", "on a deserted island", "at the Eiffel Tower", "on a flying carpet", 
+  "in the middle of the desert", "in a secret garden", "on a snowboard", "in an ice cream truck", 
+  "in an abandoned factory", "on the back of a unicorn", "on a giant cloud", "inside a volcano"
+];
+
+
+        function generateChaos() {
+            const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+            const randomAction = actions[Math.floor(Math.random() * actions.length)];
+            const randomLocation = locations[Math.floor(Math.random() * locations.length)];
+            const chaosText = `${randomSubject} ${randomAction} ${randomLocation}.`;
+            document.getElementById("chaos-output").textContent = chaosText;
+        }
+    </script>
+</body>
+</html>

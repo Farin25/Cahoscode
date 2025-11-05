@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaosCode - Pixel Chaos Drawer</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <div class="content">
+        <h1 class="überschrift">Pixel Chaos Drawer</h1>
+        <h2 class="unterschrift">Draw some chaotic pixels!</h2>
+        <canvas id="chaosCanvas" width="800" height="400"></canvas>
+    </div>
+
+    <script>
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        const canvas = document.getElementById("chaosCanvas");
+        const ctx = canvas.getContext("2d");
+        let isDrawing = false;
+
+        canvas.addEventListener("mousedown", () => isDrawing = true);
+        canvas.addEventListener("mouseup", () => isDrawing = false);
+        canvas.addEventListener("mousemove", draw);
+
+        function draw(event) {
+            if (!isDrawing) return;
+            const x = event.offsetX;
+            const y = event.offsetY;
+            const randomColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            ctx.fillStyle = randomColor;
+            ctx.fillRect(x, y, 10, 10);
+        }
+    </script>
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright ©2025; Designed by <span class="designer">GAMELION_</span>and<span class="designer">Gaming_Maker</span></p>
+        </div>
+    </footer>
+
+</body>
+</html>

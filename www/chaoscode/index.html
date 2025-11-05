@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="msvalidate.01" content="64E9DF8A8B512BA6D2550152F3F29617" />
+    <title>chaoscode - Homepage</title>
+    <style>
+        :root {
+            --primary-color: rgb(224, 224, 224);
+            --secondary-color: black;
+        }
+        .dark_mode {
+            --primary-color: #181818;
+            --secondary-color: rgb(199, 199, 199);
+        }
+        body {
+            background-color: var(--primary-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+        .content {
+            flex: 1;
+            padding-top: 100px;
+            padding-bottom: 60px; 
+        }
+        .überschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 80px;
+            font-family: monospace;
+        }
+        .unterschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 60px;
+            font-family: monospace;
+        }
+        .welcome {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 70px;
+            font-family: monospace;
+        }
+        .hover {
+            width: 170px;
+            height: 70px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: 0.4s;
+            position: fixed;
+            bottom: 80px; 
+            right: 20px;
+            z-index: 1001; 
+        }
+        .hover:hover {
+            width: 190px;
+            height: 70px;
+        }
+        .center {
+            text-align: center;
+            margin: 20px;
+        }
+        footer {
+            background-color: #181818;
+            padding: 20px 0; 
+            width: 100%;
+            text-align: center;
+            position: fixed; 
+            bottom: 0;
+            left: 0;
+            z-index: 1000; 
+        }
+        .footerBottom p {
+            color: white;
+            margin: 0;
+        }
+        .designer {
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+            margin: 0px 5px;
+        }
+        .game-btn {
+            width: 200px;
+            height: 100px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border-radius: 100px;
+            border: none;
+            font-family: monospace;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+        .game-btn:hover {
+            width: 220px;
+            height: 100px;
+        }
+        .secret-btn {
+            width: 200px;
+            height: 100px;
+            display: none;
+            position: fixed;
+            bottom: 80px; 
+            left: 20px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            cursor: pointer;
+            border-radius: 100px;
+            font-size: 20px;
+            transition: 0.4s;
+            z-index: 1001; 
+        }
+        .secret-btn:hover {
+            width: 220px;
+            height: 100px;
+        }
+        .dark-mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+        .dark_mode .dark-mode-header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+        .header-logo {
+            width: 200px;
+            height: auto;
+            background-color: transparent;
+        }
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            position: relative;
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-size: 1rem;
+            transition: color 0.3s;
+            padding-bottom: 5px;
+        }
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease-in-out;
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .dark_mode nav ul li a {
+            color: var(--secondary-color);
+        }
+        .dark_mode nav ul li a::after {
+            background-color: #ffffff;
+        }
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .menu-icon div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .dark-mode-header {
+                padding: 10px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .menu-icon {
+                display: flex;
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 20px 0;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .überschrift {
+                font-size: 50px;
+            }
+            .welcome {
+                font-size: 40px;
+            }
+            .unterschrift {
+                font-size: 30px;
+            }
+            .game-btn {
+                width: 150px;
+                height: 75px;
+                font-size: 16px;
+            }
+            .game-btn:hover {
+                width: 160px;
+                height: 75px;
+            }
+            .hover {
+                width: 140px;
+                height: 60px;
+                font-size: 14px;
+                bottom: 70px; 
+            }
+            .hover:hover {
+                width: 150px;
+                height: 60px;
+            }
+            .secret-btn {
+                width: 150px;
+                height: 75px;
+                font-size: 16px;
+                bottom: 70px; 
+            }
+            .secret-btn:hover {
+                width: 160px;
+                height: 75px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .überschrift {
+                font-size: 40px;
+            }
+            .welcome {
+                font-size: 30px;
+            }
+            .unterschrift {
+                font-size: 20px;
+            }
+            .game-btn {
+                width: 120px;
+                height: 60px;
+                font-size: 14px;
+            }
+            .game-btn:hover {
+                width: 130px;
+                height: 60px;
+            }
+            .hover {
+                width: 120px;
+                height: 50px;
+                font-size: 12px;
+                bottom: 60px; 
+            }
+            .hover:hover {
+                width: 130px;
+                height: 50px;
+            }
+            .secret-btn {
+                width: 120px;
+                height: 60px;
+                font-size: 14px;
+                bottom: 60px; 
+            }
+            .secret-btn:hover {
+                width: 130px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dark-mode-header">
+        <h2 class="header-logo">LOGO PLATZHALTER</h2>
+        <nav>
+            <div class="menu-icon" id="menuIcon">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="chaoscode.html">Home</a></li>
+                <li><a href="farin-langner.de/Webentwicklungswiki">Wiki</a></li>
+                <li><a href="about.html">Über</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    
+<div class="content">
+    <br><h1 class="überschrift">The internet was supposed to be a gateway to infinite knowledge.</h1><br><br><br><br>
+    <h1 class="welcome">Welcome to chaoscode</h1><br><br><br>
+    <h2 class="unterschrift">Instead, it has led you here. A place where nothing truly matters, except <br>for the fleeting amusement of a few interactive distractions. Enjoy the <br>illusion of entertainment while your responsibilities slowly pile up.</h2>
+    <br><br><br><br><br>
+    <div class="center"><form action="ASMR - Chaos Lounge.html"><button type="submit" class="game-btn">ASMR - Chaos Lounge</button></form></div>
+    <br><br>
+    <div class="center"><form action="Bad_Jokes.html"><button type="submit" class="game-btn">Bad Jokes Generator</button></form></div>
+    <br><br>
+    <div class="center"><form action="Cps test.html"><button type="submit" class="game-btn">Click - Race</button></form></div>
+    <br><br>
+    <div class="center"><form action="Chaos particel explosion.html"><button type="submit" class="game-btn">Chaos Particel Explosion</button></form></div>
+    <br><br>
+    <div class="center"><form action="calculator.html"><button type="submit" class="game-btn">Calculator</button></form></div>
+    <br><br>
+    <div class="center"><form action="chaoscode.html"><button type="submit" class="game-btn">chaoscode</button></form></div>
+    <br><br>
+    <div class="center"><form action="cookie-clicker.html"><button type="submit" class="game-btn">Cookie Clicker</button></form></div>
+    <br><br>
+    <div class="center"><form action="Infinitie Chaos balls.html"><button type="submit" class="game-btn">Infinite Chaos Balls</button></form></div>
+    <br><br>
+    <div class="center"><form action="Jumpandrun.html"><button type="submit" class="game-btn">Jump and Run</button></form></div>
+    <br><br>
+    <div class="center"><form action="lie_detector.html"><button type="submit" class="game-btn">Lie Detector</button></form></div>
+    <br><br>
+    <div class="center"><form action="Math-quiz.html"><button type="submit" class="game-btn">Math Quiz</button></form></div>
+    <br><br>
+    <div class="center"><form action="Namens_Generator.html"><button type="submit" class="game-btn">Name Generator</button></form></div>
+    <br><br>
+    <div class="center"><form action="Packman.html"><button type="submit" class="game-btn">Packman</button></form></div>
+    <br><br>
+    <div class="center"><form action="Pixel - Chaos Drawe.html"><button type="submit" class="game-btn">Pixel Chaos Drawer</button></form></div>
+    <br><br>
+    <div class="center"><form action="Quader -race.html"><button type="submit" class="game-btn">Quader - Race</button></form></div>
+    <br><br>
+    <div class="center"><form action="Random chaos generator.html"><button type="submit" class="game-btn">Random Chaos Generator</button></form></div>
+    <br><br>
+    <div class="center"><form action="Race.html"><button type="submit" class="game-btn">Race</button></form></div>
+    <br><br>
+    <div class="center"><form action="snake.html"><button type="submit" class="game-btn">Snake</button></form></div>
+    <br><br>
+    <div class="center"><form action="spaceshooter.html"><button type="submit" class="game-btn">Spaceshooter</button></form></div>
+    <br><br>
+    <div class="center"><form action="Tic tac toe.html"><button type="submit" class="game-btn">Tic Tac Toe</button></form></div>
+    <br><br>
+    <div class="center"><form action="thegreen.html"><button type="submit" class="game-btn">The Green</button></form></div>
+    <br><br>
+    <div class="center"><form action="about.html"><button type="submit" class="game-btn">About</button></form></div>
+    <br><br>
+<div class="center"><form action="Lava_Leap.html"><button type="submit" class="game-btn">Lava Leap</button></form></div>
+<br><br>
+<div class="center"><form action="cookiev2.html"><button type="submit" class="game-btn">Cookie Clicker V2</button></form></div>
+<br><br>
+<div class="center"><form action="index_final_with_clean_buttons.html"><button type="submit" class="game-btn">Index Clean Buttons</button></form></div>
+<br><br>
+<div class="center"><form action="index_sitemap_buttons.html"><button type="submit" class="game-btn">Index Sitemap Buttons</button></form></div>
+<br><br>
+<div class="center"><form action="index_with_a_tags.html"><button type="submit" class="game-btn">Index with A-Tags</button></form></div>
+<br><br>
+<div class="center"><form action="packman.html"><button type="submit" class="game-btn">Packman (Alt)</button></form></div>
+<br><br>
+<div class="center"><form action="race.html"><button type="submit" class="game-btn">Race (Alt)</button></form></div>
+<br><br>
+<div class="center"><form action="tetris.html"><button type="submit" class="game-btn">Tetris</button></form></div>
+
+    <form action="SECRET PAGE 🕵️.html">
+        <button class="secret-btn">Secret</button>
+    </form>
+</div>
+
+            <button class="secret-btn">Secret</button>
+        </form>
+    </div>
+
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright ©2025; Designed by <span class="designer">GAMELION_</span>and<span class="designer">Gaming_Maker</span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.ctrlKey && event.key === "x") {
+                let secretBtn = document.querySelector(".secret-btn");
+                secretBtn.style.display = secretBtn.style.display === "block" ? "none" : "block";
+            }
+        });
+
+        
+        const menuIcon = document.getElementById('menuIcon');
+        const navLinks = document.getElementById('navLinks');
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const isActive = navLinks.classList.contains('active');
+            menuIcon.children[0].style.transform = isActive ? 'rotate(45deg) translate(5px, 5px)' : 'none';
+            menuIcon.children[1].style.opacity = isActive ? '0' : '1';
+            menuIcon.children[2].style.transform = isActive ? 'rotate(-45deg) translate(8px, -8px)' : 'none';
+        });
+    </script>
+</body>
+</html>

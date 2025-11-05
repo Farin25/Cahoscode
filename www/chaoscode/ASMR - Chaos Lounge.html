@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaosCode ASMR Lounge</title>
+    <style>
+        :root {
+            --primary-color: rgb(224, 224, 224);
+            --secondary-color: black;
+        }
+        .dark_mode {
+            --primary-color: #181818;
+            --secondary-color: rgb(199, 199, 199);
+        }
+        body {
+            background-color: var(--primary-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .content {
+            flex: 1;
+            padding-top: 100px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .überschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 80px;
+            font-family: monospace;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .welcome {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 70px;
+            font-family: monospace;
+            animation: pulseText 3s infinite ease-in-out;
+        }
+        @keyframes pulseText {
+            0%, 100% { text-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+            50% { text-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
+        }
+        .unterschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 40px;
+            font-family: monospace;
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.5;
+        }
+        .hover {
+            width: 170px;
+            height: 70px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .hover:hover {
+            width: 190px;
+            height: 70px;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        .center {
+            text-align: center;
+            margin: 20px;
+        }
+        .asmr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .asmr-card {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .dark_mode .asmr-card {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .asmr-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .asmr-card h3 {
+            font-size: 24px;
+            color: var(--secondary-color);
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .asmr-card p {
+            font-size: 16px;
+            color: var(--secondary-color);
+            opacity: 0.8;
+            margin: 0;
+        }
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border-radius: 50%;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        footer {
+            background-color: #181818;
+            padding: 20px;
+            text-align: center;
+        }
+        .footerBottom p {
+            color: white;
+            margin: 0;
+        }
+        .designer {
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+        .dark-mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+        .dark_mode .dark-mode-header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+        .header-logo {
+            font-size: 24px;
+            color: var(--secondary-color);
+            font-family: monospace;
+            font-weight: bold;
+        }
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            position: relative;
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding-bottom: 5px;
+        }
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease-in-out;
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .dark_mode nav ul li a::after {
+            background-color: #ffffff;
+        }
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .menu-icon div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dark-mode-header {
+                padding: 10px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .menu-icon {
+                display: flex;
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 20px 0;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .überschrift {
+                font-size: 50px;
+            }
+            .welcome {
+                font-size: 40px;
+            }
+            .unterschrift {
+                font-size: 24px;
+            }
+            .asmr-grid {
+                grid-template-columns: 1fr;
+            }
+            .hover {
+                width: 140px;
+                height: 60px;
+                font-size: 14px;
+            }
+            .hover:hover {
+                width: 150px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .überschrift {
+                font-size: 40px;
+            }
+            .welcome {
+                font-size: 30px;
+            }
+            .unterschrift {
+                font-size: 18px;
+            }
+            .play-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            .hover {
+                width: 120px;
+                height: 50px;
+                font-size: 12px;
+            }
+            .hover:hover {
+                width: 130px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dark-mode-header">
+        <h2 class="header-logo">ChaosCode ASMR</h2>
+        <nav>
+            <div class="menu-icon" id="menuIcon">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="chaoscode.html">Home</a></li>
+                <li><a href="#sounds">Sounds</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <div class="content">
+        <h1 class="überschrift">Welcome to the ASMR Lounge</h1>
+        <h1 class="welcome">ChaosCode ASMR</h1>
+        <h2 class="unterschrift">Relax with soothing sounds and gentle whispers. Let the chaos of the world fade away.</h2>
+        <div class="asmr-grid">
+            <div class="asmr-card">
+                <h3>Gameboy ASMR</h3>
+                <p>Tapping Gameboy sounds.</p>
+                <button class="play-btn" data-type="gameboy">▶</button>
+            </div>
+            <div class="asmr-card">
+                <h3>Rain Drops</h3>
+                <p>Light rain tapping on a surface.</p>
+                <button class="play-btn" data-type="rain">▶</button>
+            </div>
+            <div class="asmr-card">
+                <h3>Paper Crinkle</h3>
+                <p>The sound of crinkling paper.</p>
+                <button class="play-btn" data-type="paper">▶</button>
+            </div>
+            <div class="asmr-card">
+                <h3>Wood Tapping</h3>
+                <p>Soft taps on a wooden surface.</p>
+                <button class="play-btn" data-type="wood">▶</button>
+            </div>
+            <div class="asmr-card">
+                <h3>Keyboard sounds</h3>
+                <p>Tapping keyboard sounds</p>
+                <button class="play-btn" data-type="keyboard">▶</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright ©2025; Designed by <span class="designer">GAMELION_</span>and<span class="designer">Gaming_Maker</span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        const menuIcon = document.getElementById('menuIcon');
+        const navLinks = document.getElementById('navLinks');
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const isActive = navLinks.classList.contains('active');
+            menuIcon.children[0].style.transform = isActive ? 'rotate(45deg) translate(5px, 5px)' : 'none';
+            menuIcon.children[1].style.opacity = isActive ? '0' : '1';
+            menuIcon.children[2].style.transform = isActive ? 'rotate(-45deg) translate(8px, -8px)' : 'none';
+        });
+
+        const sounds = {
+            gameboy: new Audio('Gameboy ASMR.mp3'),
+            rain: new Audio('Rain ASMR.mp3'),
+            paper: new Audio('Crumbling paper ASMR.mp3'),
+            wood: new Audio('Tapping wood.mp3'),
+            keyboard: new Audio('mechanical-keyboard-typing-sound.mp3'),
+        };
+
+        let currentSound = null;
+
+        document.querySelectorAll('.play-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                const sound = sounds[type];
+
+                if (!sound) {
+                    alert(`Sound "${type}" not found! Please add the file.`);
+                    return;
+                }
+
+                // Wenn ein anderer Sound läuft, diesen stoppen
+                if (currentSound && currentSound !== sound) {
+                    currentSound.pause();
+                    currentSound.currentTime = 0;
+                    const prevButton = document.querySelector(`.play-btn[data-type="${Object.keys(sounds).find(key => sounds[key] === currentSound)}"]`);
+                    if (prevButton) prevButton.textContent = '▶';
+                }
+
+                // Zustandslogik für den aktuellen Button
+                if (this.textContent === '▶') {
+                    // Play
+                    sound.play().catch(error => {
+                        console.log("Error playing sound:", error);
+                    });
+                    this.textContent = '||';
+                    currentSound = sound;
+                } else if (this.textContent === '||') {
+                    // Pause
+                    sound.pause();
+                    this.textContent = '■';
+                } else if (this.textContent === '■') {
+                    // Stop und zurücksetzen
+                    sound.pause();
+                    sound.currentTime = 0;
+                    this.textContent = '▶';
+                    currentSound = null;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

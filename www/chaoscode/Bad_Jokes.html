@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Joke Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: var(--primary-color); }
+        button { font-size: 20px; padding: 10px 20px; cursor: pointer; }
+        .joke { font-size: 24px; margin-top: 20px; color: var(--secondary-color);}
+        .glow {
+      width: 200px;
+      height: 100px;
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease;
+      font-size: 20px;
+
+      transition: 0.5s;
+    }
+
+    .glow:hover {
+      box-shadow: 0 0 30px #017ed1;
+      width: 220px;
+    }
+
+    .überschrift{
+        font-family: monospace;
+        font-size: 50px;
+        color: var(--secondary-color);
+
+    }
+    :root {
+            --primary-color: white;
+            --secondary-color: black;
+        }
+        .dark_mode {
+            --primary-color: #181818;
+            --secondary-color: white; 
+        }
+        .hover {
+            width: 170px;
+            height: 70px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: 0.4s;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        .hover:hover {
+            width: 190px;
+            height: 70px;
+        }
+    </style>
+</head>
+<body>
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <h1 class="überschrift">Welcome to the Joke Generator!<br><br>
+        Get ready to laugh, or at least groan! If you’re here, you’re in need of some good (or bad) jokes to <br><br>lighten your day. Click the button below, and let’s see what hilarious, cringy, or downright ridiculous <br><br>joke pops up next! Get ready to facepalm. 🤪</h1>
+    <br><br><br>
+        <button onclick="getJoke()" class="glow">Get a Joke!</button>
+    <div class="joke" id="joke"></div>
+
+    <script>
+        async function getJoke() {
+            const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+            const joke = await res.json();
+            document.getElementById('joke').innerText = joke.setup + ' - ' + joke.punchline;
+        }
+        document.getElementById("dark_mode_button").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+    </script>
+</body>
+</html>

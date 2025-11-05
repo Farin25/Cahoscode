@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zufälliger Name</title>
+    <script>
+        function getRandomName() {
+            // Erstelle eine Liste von Namen
+            var names = ["Anna", "Ben", "Clara", "David", "Eva", "Felix", "Gabi", "Hans", "Ines", "Jürgen",
+                "Karla", "Leo", "Mira", "Nico", "Olga", "Paul", "Quinn", "Rita", "Stefan", "Tina",
+                "Udo", "Vera", "Willy", "Xenia", "Yvonne", "Zeno" , "Michel" , "Waldemar" , "Farin" , "Liam" , "Michel" , "Nerv Nicht" , "Diego" ];
+
+            // Wähle einen zufälligen Index aus der Liste
+            var randomIndex = Math.floor(Math.random() * names.length);
+
+            // Gib den Namen mit dem zufälligen Index zurück
+            var randomName = names[randomIndex];
+
+            // Setze den Namen in das HTML-Element
+            document.getElementById("randomName").innerText = randomName;
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Zufälliger Name Generator</h1>
+    
+    <!-- Hier wird der zufällige Name angezeigt -->
+    <p id="randomName">Klicke auf den Button, um einen Namen zu generieren</p>
+
+    <!-- Button, um einen neuen zufälligen Namen zu generieren -->
+    <button onclick="getRandomName()">Zufälligen Namen anzeigen</button>
+
+</body>
+</html>

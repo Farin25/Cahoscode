@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaosCode Cookie Clicker</title>
+    <style>
+        :root {
+            --primary-color: rgb(224, 224, 224);
+            --secondary-color: black;
+        }
+        .dark_mode {
+            --primary-color: #181818;
+            --secondary-color: rgb(199, 199, 199);
+        }
+        body {
+            background-color: var(--primary-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .content {
+            flex: 1;
+            padding-top: 100px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .überschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 80px;
+            font-family: monospace;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .welcome {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 70px;
+            font-family: monospace;
+            animation: pulseText 3s infinite ease-in-out;
+        }
+        @keyframes pulseText {
+            0%, 100% { text-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+            50% { text-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
+        }
+        .unterschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 40px;
+            font-family: monospace;
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.5;
+        }
+        .hover {
+            width: 170px;
+            height: 70px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .hover:hover {
+            width: 190px;
+            height: 70px;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .cookie-card {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dark_mode .cookie-card {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .cookie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .cookie-card img {
+            width: 250px;
+            height: 250px;
+            transition: transform 0.2s ease;
+        }
+        .cookie-card img:active {
+            transform: scale(0.95);
+        }
+        .score, .energy {
+            font-size: 24px;
+            color: var(--secondary-color);
+            font-family: monospace;
+            margin: 20px 0;
+        }
+        .upgrade-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        .upgrade-btn {
+            width: 100%;
+            height: 60px;
+            border-radius: 10px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .upgrade-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        .upgrade-btn:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .upgrade-info {
+            font-size: 14px;
+            color: var(--secondary-color);
+            margin-top: 5px;
+            text-align: center;
+        }
+        footer {
+            background-color: #181818;
+            padding: 20px;
+            text-align: center;
+        }
+        .footerBottom p {
+            color: white;
+            margin: 0;
+        }
+        .designer {
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+        .dark-mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+        .dark_mode .dark-mode-header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+        .header-logo {
+            font-size: 24px;
+            color: var(--secondary-color);
+            font-family: monospace;
+            font-weight: bold;
+        }
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            position: relative;
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding-bottom: 5px;
+        }
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease-in-out;
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .dark_mode nav ul li a::after {
+            background-color: #ffffff;
+        }
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .menu-icon div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dark-mode-header {
+                padding: 10px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .menu-icon {
+                display: flex;
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 20px 0;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .überschrift {
+                font-size: 50px;
+            }
+            .welcome {
+                font-size: 40px;
+            }
+            .unterschrift {
+                font-size: 24px;
+            }
+            .cookie-card {
+                width: 250px;
+                height: 250px;
+            }
+            .cookie-card img {
+                width: 200px;
+                height: 200px;
+            }
+            .hover {
+                width: 140px;
+                height: 60px;
+                font-size: 14px;
+            }
+            .hover:hover {
+                width: 150px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .überschrift {
+                font-size: 40px;
+            }
+            .welcome {
+                font-size: 30px;
+            }
+            .unterschrift {
+                font-size: 18px;
+            }
+            .cookie-card {
+                width: 200px;
+                height: 200px;
+            }
+            .cookie-card img {
+                width: 150px;
+                height: 150px;
+            }
+            .hover {
+                width: 120px;
+                height: 50px;
+                font-size: 12px;
+            }
+            .hover:hover {
+                width: 130px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dark-mode-header">
+        <h2 class="header-logo">ChaosCode Cookie Clicker</h2>
+        <nav>
+            <div class="menu-icon" id="menuIcon">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="chaoscode.html">Home</a></li>
+                <li><a href="#">wiki</a></li>
+                <li><a href="about.html">über</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <div class="content">
+        <h1 class="überschrift">Cookie Clicker</h1>
+        <h1 class="welcome">ChaosCode Bakery</h1>
+        <h2 class="unterschrift">Click the cookie to bake more! Upgrade your bakery with workers and machines.</h2>
+        <div class="game-container">
+            <div class="cookie-card">
+                <img id="cookie" src="cookie.png" alt="Cookie">
+            </div>
+            <div class="score">Cookies: <span id="cookieCount">0</span></div>
+            <div class="energy">Energy: <span id="energyCount">0</span> W (<span id="energyProduction">0</span> W/s produced, <span id="energyConsumption">0</span> W/s consumed)</div>
+            <div class="upgrade-container">
+                <div>
+                    <button class="upgrade-btn" id="bakerBtn">Hire Baker (Cost: 100)</button>
+                    <div class="upgrade-info">Bakers: <span id="bakerCount">0</span> (+5 cookies/s)</div>
+                </div>
+                <div>
+                    <button class="upgrade-btn" id="cursorBtn">Buy Cursor (Cost: 10)</button>
+                    <div class="upgrade-info">Cursors: <span id="cursorCount">0</span> (+2 cookies/min)</div>
+                </div>
+                <div>
+                    <button class="upgrade-btn" id="solarBtn">Buy Solar Panel (Cost: 200)</button>
+                    <div class="upgrade-info">Solar Panels: <span id="solarCount">0</span> (+20 W/s)</div>
+                </div>
+                <div>
+                    <button class="upgrade-btn" id="windBtn">Buy Wind Turbine (Cost: 150)</button>
+                    <div class="upgrade-info">Wind Turbines: <span id="windCount">0</span> (+15 W/s)</div>
+                </div>
+                <div>
+                    <button class="upgrade-btn" id="largeSolarBtn">Buy Large Solar Panel (Cost: 500)</button>
+                    <div class="upgrade-info">Large Solar Panels: <span id="largeSolarCount">0</span> (+50 W/s)</div>
+                </div>
+                <div>
+                    <button class="upgrade-btn" id="largeWindBtn">Buy Large Wind Turbine (Cost: 400)</button>
+                    <div class="upgrade-info">Large Wind Turbines: <span id="largeWindCount">0</span> (+40 W/s)</div>
+                </div>
+                <div>
+                    <button class="upgrade-btn" id="machineBtn">Buy Cookie Machine (Cost: 300)</button>
+                    <div class="upgrade-info">Cookie Machines: <span id="machineCount">0</span> (+10 cookies/s, -10 W/s)</div>
+                </div>
+                <div>
+                    <button class="upgrade-btn" id="largeMachineBtn">Buy Large Cookie Machine (Cost: 600)</button>
+                    <div class="upgrade-info">Large Cookie Machines: <span id="largeMachineCount">0</span> (+25 cookies/s, -20 W/s)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright ©2025; Designed and developed by <span class="designer">GAMELION_</span> and <span class="designer">Gaming_Maker</span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        // Menu toggle for mobile
+        const menuIcon = document.getElementById('menuIcon');
+        const navLinks = document.getElementById('navLinks');
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const isActive = navLinks.classList.contains('active');
+            menuIcon.children[0].style.transform = isActive ? 'rotate(45deg) translate(5px, 5px)' : 'none';
+            menuIcon.children[1].style.opacity = isActive ? '0' : '1';
+            menuIcon.children[2].style.transform = isActive ? 'rotate(-45deg) translate(8px, -8px)' : 'none';
+        });
+
+        // Cookie Clicker logic
+        let cookies = 0;
+        let energy = 0;
+        let energyProduction = 0;
+        let energyConsumption = 0;
+
+        // Upgrade counts
+        let bakers = 0;
+        let cursors = 0;
+        let solarPanels = 0;
+        let windTurbines = 0;
+        let largeSolarPanels = 0;
+        let largeWindTurbines = 0;
+        let cookieMachines = 0;
+        let largeCookieMachines = 0;
+
+        // Upgrade definitions
+        const upgrades = {
+            baker: { cost: 100, cookieRate: 5, energy: 0 },
+            cursor: { cost: 10, cookieRate: 2 / 60, energy: 0 }, // 2 cookies per minute
+            solar: { cost: 200, cookieRate: 0, energy: 20 },
+            wind: { cost: 150, cookieRate: 0, energy: 15 },
+            largeSolar: { cost: 500, cookieRate: 0, energy: 50 },
+            largeWind: { cost: 400, cookieRate: 0, energy: 40 },
+            machine: { cost: 300, cookieRate: 10, energy: -10 },
+            largeMachine: { cost: 600, cookieRate: 25, energy: -20 }
+        };
+
+        // DOM elements
+        const cookie = document.getElementById('cookie');
+        const cookieCount = document.getElementById('cookieCount');
+        const energyCount = document.getElementById('energyCount');
+        const energyProductionEl = document.getElementById('energyProduction');
+        const energyConsumptionEl = document.getElementById('energyConsumption');
+        const bakerBtn = document.getElementById('bakerBtn');
+        const cursorBtn = document.getElementById('cursorBtn');
+        const solarBtn = document.getElementById('solarBtn');
+        const windBtn = document.getElementById('windBtn');
+        const largeSolarBtn = document.getElementById('largeSolarBtn');
+        const largeWindBtn = document.getElementById('largeWindBtn');
+        const machineBtn = document.getElementById('machineBtn');
+        const largeMachineBtn = document.getElementById('largeMachineBtn');
+        const bakerCount = document.getElementById('bakerCount');
+        const cursorCount = document.getElementById('cursorCount');
+        const solarCount = document.getElementById('solarCount');
+        const windCount = document.getElementById('windCount');
+        const largeSolarCount = document.getElementById('largeSolarCount');
+        const largeWindCount = document.getElementById('largeWindCount');
+        const machineCount = document.getElementById('machineCount');
+        const largeMachineCount = document.getElementById('largeMachineCount');
+
+        // Click cookie to increase score
+        cookie.addEventListener('click', () => {
+            cookies++;
+            updateDisplay();
+        });
+
+        // Upgrade button handlers
+        bakerBtn.addEventListener('click', () => buyUpgrade('baker'));
+        cursorBtn.addEventListener('click', () => buyUpgrade('cursor'));
+        solarBtn.addEventListener('click', () => buyUpgrade('solar'));
+        windBtn.addEventListener('click', () => buyUpgrade('wind'));
+        largeSolarBtn.addEventListener('click', () => buyUpgrade('largeSolar'));
+        largeWindBtn.addEventListener('click', () => buyUpgrade('largeWind'));
+        machineBtn.addEventListener('click', () => buyUpgrade('machine'));
+        largeMachineBtn.addEventListener('click', () => buyUpgrade('largeMachine'));
+
+        // Buy upgrade function
+        function buyUpgrade(type) {
+            const upgrade = upgrades[type];
+            if (cookies >= upgrade.cost) {
+                cookies -= upgrade.cost;
+                if (type === 'baker') bakers++;
+                else if (type === 'cursor') cursors++;
+                else if (type === 'solar') solarPanels++;
+                else if (type === 'wind') windTurbines++;
+                else if (type === 'largeSolar') largeSolarPanels++;
+                else if (type === 'largeWind') largeWindTurbines++;
+                else if (type === 'machine') cookieMachines++;
+                else if (type === 'largeMachine') largeCookieMachines++;
+                updateEnergy();
+                updateDisplay();
+            }
+        }
+
+        // Update energy production and consumption
+        function updateEnergy() {
+            energyProduction = solarPanels * upgrades.solar.energy +
+                              windTurbines * upgrades.wind.energy +
+                              largeSolarPanels * upgrades.largeSolar.energy +
+                              largeWindTurbines * upgrades.largeWind.energy;
+            energyConsumption = cookieMachines * -upgrades.machine.energy +
+                               largeCookieMachines * -upgrades.largeMachine.energy;
+        }
+
+        // Update display
+        function updateDisplay() {
+            cookieCount.textContent = Math.floor(cookies);
+            energyCount.textContent = Math.floor(energy);
+            energyProductionEl.textContent = energyProduction;
+            energyConsumptionEl.textContent = energyConsumption;
+            bakerCount.textContent = bakers;
+            cursorCount.textContent = cursors;
+            solarCount.textContent = solarPanels;
+            windCount.textContent = windTurbines;
+            largeSolarCount.textContent = largeSolarPanels;
+            largeWindCount.textContent = largeWindTurbines;
+            machineCount.textContent = cookieMachines;
+            largeMachineCount.textContent = largeCookieMachines;
+
+            // Update button states
+            bakerBtn.disabled = cookies < upgrades.baker.cost;
+            cursorBtn.disabled = cookies < upgrades.cursor.cost;
+            solarBtn.disabled = cookies < upgrades.solar.cost;
+            windBtn.disabled = cookies < upgrades.wind.cost;
+            largeSolarBtn.disabled = cookies < upgrades.largeSolar.cost;
+            largeWindBtn.disabled = cookies < upgrades.largeWind.cost;
+            machineBtn.disabled = cookies < upgrades.machine.cost;
+            largeMachineBtn.disabled = cookies < upgrades.largeMachine.cost;
+        }
+
+        // Game loop
+        setInterval(() => {
+            // Update energy
+            energy += (energyProduction - energyConsumption) / 10;
+            if (energy < 0) energy = 0;
+
+            // Calculate cookies (machines only work if enough energy)
+            let cookiesPerSecond = bakers * upgrades.baker.cookieRate +
+                                  cursors * upgrades.cursor.cookieRate;
+            if (energy >= energyConsumption) {
+                cookiesPerSecond += cookieMachines * upgrades.machine.cookieRate +
+                                   largeCookieMachines * upgrades.largeMachine.cookieRate;
+            }
+
+            cookies += cookiesPerSecond / 10;
+            updateDisplay();
+        }, 100);
+    </script>
+</body>
+</html>

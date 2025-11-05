@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lied Detector</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: var(--primary-color); }
+        button { font-size: 20px; padding: 10px 20px; cursor: pointer; }
+        .result { font-size: 30px; margin-top: 20px; color: var(--secondary-color); font-family: monospace;}
+        .überschrift{
+            font-family: monospace;
+            font-size: 50px;
+            color: var(--secondary-color);
+        }
+        :root {
+            --primary-color: white;
+            --secondary-color: black;
+        }
+        .dark_mode {
+            --primary-color: #181818;
+            --secondary-color: white;
+        }
+        .hover {
+            width: 170px;
+            height: 70px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: 0.4s;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        .hover:hover {
+            width: 190px;
+            height: 70px;
+        }
+        .unterschrift{
+            font-family: monospace;
+            font-size: 45px;
+            color: var(--secondary-color);
+        }
+        .flip {
+      width: 200px;
+      height: 100px;
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+      border: none;
+      border-radius: 100px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.6s ease;
+      perspective: 1000px;
+      font-size: 20px;
+    }
+
+    .flip:hover {
+      transform: rotateY(180deg);
+    }
+    footer {
+            background-color: #181818;
+            padding: 1px 0;
+            width: 100%;
+            text-align: center;
+        }
+        .footerContainer {
+            width: 100%;
+            padding: 70px 30px 20px;
+        }
+        .footerNav {
+            margin: 30px 0;
+        }
+        .footerNav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+        }
+        .footerNav ul li a {
+            color: white;
+            margin: 20px;
+            text-decoration: none;
+            font-size: 1.3em;
+            opacity: 0.7;
+            transition: 0.5s;
+        }
+        .footerNav ul li a:hover {
+            opacity: 1;
+        }
+        .footerBottom {
+            background-color: #1a1a1a;
+            padding: 20px;
+            text-align: center;
+        }
+        .footerBottom p {
+            color: white;
+        }
+        .designer {
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+            margin: 0px 5px;
+        }
+    </style>
+</head>
+<body>
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <h1 class="überschrift">Lie Detector</h1><br><br>
+    <h2 class="unterschrift">Here’s a greeting you could use for the lie detector:<br><br>
+
+        “Welcome to the Truth Test! Get ready to answer some questions, and let's see how honest you're really feeling. Remember, the truth always comes out!”</h2><br><br>
+    <button onclick="detectLie()" class="flip">Am I lying?</button>
+    <div class="result" id="result"></div>
+    <script>
+        function detectLie() {
+            const responses = ["Yes, you're lying!", "Nope, you're telling the truth.", "Totally a lie!", "You seem truthful today!"];
+            const result = responses[Math.floor(Math.random() * responses.length)];
+            document.getElementById('result').innerText = result;
+        }
+        document.getElementById("dark_mode_button").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'937d8888ecbe6a77',t:'MTc0NTkxNjQzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

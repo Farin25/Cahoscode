@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>math-quiz - chaoscode</title>
+    <style>
+        :root {
+            --primary-color: rgb(224, 224, 224);
+            --secondary-color: black;
+        }
+        .dark_mode {
+            --primary-color: #181818;
+            --secondary-color: rgb(199, 199, 199);
+        }
+        body {
+            background-color: var(--primary-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .hover {
+            width: 170px;
+            height: 70px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: 0.4s;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000; 
+        }
+        .hover:hover {
+            width: 190px;
+            height: 70px;
+        }
+        .überschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 80px;
+            font-family: monospace;
+        }
+        .unterschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 60px;
+            font-family: monospace;
+        }
+        .quiz-container {
+            text-align: center;
+            margin: 20px;
+        }
+        .quiz-question {
+            font-size: 40px;
+            margin: 20px 0;
+        }
+        .quiz-input {
+            font-size: 30px;
+            padding: 10px;
+            width: 120px; 
+            text-align: center;
+        }
+        .quiz-btn {
+            font-size: 30px;
+            padding: 10px 20px;
+            margin-top: 10px; 
+            cursor: pointer;
+            border-radius: 10px;
+            border: none;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+        #result {
+            font-size: 30px;
+            margin-top: 20px; 
+        }
+        .info-box {
+            display: none; 
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--secondary-color);
+            padding: 20px;
+            z-index: 1001; 
+            text-align: center;
+            font-size: 30px;
+            border-radius: 10px;
+        }
+        footer {
+            background-color: #181818;
+            margin-top: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        .footerBottom {
+            color: white;
+        }
+        .designer {
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+            margin: 0px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="center"><button class="hover">Change Theme</button></div>
+    <h1 class="überschrift">Welcome to Chaoscode's Math Quiz!</h1><br><br>
+    <h1 class="unterschrift">Hello, math enthusiasts and curious minds! 🎉<br>
+        Welcome to our Math Quiz, where numbers dance, and equations become your playful companions!<br>
+        Are you ready to test your skills? Whether you're a math whiz or someone who shudders at the thought of numbers, we invite you to dive into our exciting world of questions designed to tickle your brain and spark your curiosity.</h1>
+
+    <div class="quiz-container">
+        <div id="question" class="quiz-question">Question will appear here</div>
+        <input type="number" id="answer" class="quiz-input" placeholder="Your answer">
+        <button class="quiz-btn" onclick="checkAnswer()">Submit Answer</button>
+        <div id="result"></div>
+    </div>
+
+    <div id="info-box" class="info-box"></div> 
+
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright &copy;2025; Designed by <span class="designer">GAMELION_</span></p>
+        </div>
+    </footer>
+
+    <script>
+        let currentQuestion;
+        let correctAnswer;
+
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 10) + 1; 
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            currentQuestion = `What is ${num1} + ${num2}?`;
+            correctAnswer = num1 + num2;
+            document.getElementById('question').innerText = currentQuestion;
+            document.getElementById('result').innerText = '';
+            document.getElementById('answer').value = '';
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            const infoBox = document.getElementById('info-box');
+            if (userAnswer === correctAnswer) {
+                infoBox.innerText = 'Correct! 🎉';
+                infoBox.style.color = 'green'; 
+            } else {
+                infoBox.innerText = `Incorrect. The correct answer is ${correctAnswer}.`;
+                infoBox.style.color = 'red';
+            }
+            infoBox.style.display = 'block'; 
+
+            setTimeout(() => {
+                infoBox.style.display = 'none'; 
+                generateQuestion();
+            }, 2000);
+        }
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        generateQuestion();
+    </script>
+</body>
+</html>

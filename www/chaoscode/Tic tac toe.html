@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaos Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="content">
+        <h1 class="überschrift">Chaos Tic-Tac-Toe</h1>
+        <div class="game-box" id="gameBox">
+            <h2>Tic-Tac-Toe</h2>
+            <canvas id="tttCanvas" width="200" height="200"></canvas>
+            <button class="game-btn" onclick="resetTTT()">Reset</button>
+            <p id="status">Player X's turn</p>
+        </div>
+    </div>
+    <button class="hover" id="dark_mode_button">Change Theme</button>
+    <footer>
+        <p>Copyright ©2025; Designed by <span>GAMELION_</span></p>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        document.getElementById("dark_mode_button").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        // Tic-Tac-Toe
+        const canvas = document.getElementById("tttCanvas");
+        const ctx = canvas.getContext("2d");
+        const gameBox = document.getElementById("gameBox");
+        let board = Array(9).fill(null);
+        let turn = "X";
+        let gameOver = false;
+        let chaosLevel = 0;
+
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "#000";
+            for (let i = 1; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * 66, 0); ctx.lineTo(i * 66, 200); ctx.stroke();
+                ctx.moveTo(0, i * 66); ctx.lineTo(200, i * 66); ctx.stroke();
+            }
+            board.forEach((val, i) => {
+                if (val) {
+                    ctx.font = "40px monospace";
+                    ctx.fillStyle = val === "X" ? "#ff0000" : "#00ff00";
+                    const x = (i % 3) * 66 + 20 + (Math.random() > 0.9 ? Math.random() * 10 - 5 : 0); // Random wobble
+                    const y = Math.floor(i / 3) * 66 + 40 + (Math.random() > 0.9 ? Math.random() * 10 - 5 : 0);
+                    ctx.fillText(val, x, y);
+                }
+            });
+        }
+
+        function checkWinner() {
+            const wins = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]             // Diagonals
+            ];
+            for (let [a, b, c] of wins) {
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    return board[a];
+                }
+            }
+            return board.every(cell => cell) ? "Draw" : null;
+        }
+
+        function spawnConfetti() {
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = Math.random() * 300 + "px";
+                confetti.style.top = Math.random() * 400 + "px";
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                const dx = (Math.random() - 0.5) * 2; // Random x direction
+                const dy = (Math.random() - 0.5) * 2; // Random y direction
+                confetti.style.setProperty("--dx", dx);
+                confetti.style.setProperty("--dy", dy);
+                gameBox.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 2000);
+            }
+        }
+
+        function chaosEvent() {
+            chaosLevel++;
+            const rand = Math.random();
+            if (rand < 0.25) {
+                spawnConfetti();
+                document.getElementById("status").textContent = "Confetti Chaos!";
+            } else if (rand < 0.5) {
+                canvas.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                setTimeout(() => canvas.style.backgroundColor = "#fff", 1000);
+            } else if (rand < 0.75) {
+                const empty = board.map((v, i) => v === null ? i : -1).filter(i => i >= 0);
+                if (empty.length > 0) {
+                    board[empty[Math.floor(Math.random() * empty.length)]] = Math.random() > 0.5 ? "X" : "O";
+                    document.getElementById("status").textContent = "Chaos made a move!";
+                }
+            } else {
+                gameBox.style.transform = "rotate(5deg)";
+                setTimeout(() => gameBox.style.transform = "scale(1)", 500);
+            }
+            drawBoard();
+        }
+
+        canvas.addEventListener("click", (e) => {
+            if (gameOver) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = Math.floor((e.clientX - rect.left) / 66);
+            const y = Math.floor((e.clientY - rect.top) / 66);
+            const idx = y * 3 + x;
+            if (!board[idx]) {
+                board[idx] = turn;
+                drawBoard();
+                const winner = checkWinner();
+                if (winner) {
+                    gameOver = true;
+                    document.getElementById("status").textContent = winner === "Draw" ? "It's a draw!" : `${winner} wins!`;
+                    spawnConfetti();
+                } else {
+                    turn = turn === "X" ? "O" : "X";
+                    document.getElementById("status").textContent = `Player ${turn}'s turn`;
+                    if (Math.random() < 0.5 + chaosLevel * 0.1) chaosEvent();
+                }
+            }
+        });
+
+        function resetTTT() {
+            board = Array(9).fill(null);
+            turn = "X";
+            gameOver = false;
+            chaosLevel = 0;
+            document.getElementById("status").textContent = "Player X's turn";
+            canvas.style.backgroundColor = "#fff";
+            gameBox.style.transform = "scale(1)";
+            drawBoard();
+        }
+
+        // Initial drawing of the board
+        drawBoard();
+    </script>
+</body>
+</html>

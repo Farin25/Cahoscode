@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chaoscode - DVD Race</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <div class="content">
+        <h1 class="überschrift">Quader Chaos Race</h1>
+        <h2 class="unterschrift">Watch the squares bounce and race to the finish!</h2>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div class="button-container">
+            <button class="game-btn" id="map1Btn">Map 1</button>
+            <button class="game-btn" id="map2Btn">Map 2</button>
+            <button class="game-btn" id="map3Btn">Map 3</button>
+            <button class="game-btn" id="map4Btn">Map 4</button>
+            <button class="game-btn" id="map5Btn">Map 5</button>
+            <button class="game-btn" id="resetBtn">Reset</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright ©2025; Designed by <span class="designer">GAMELION_</span>and<span class="designer">Gaming_Maker</span></p>
+        </div>
+    </footer>
+
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const players = [
+            { x: 50, y: 50, dx: Math.random() * 3 + 2, dy: Math.random() * 3 + 2, color: 'red', size: 20 },
+            { x: 50, y: 100, dx: Math.random() * 3 + 2, dy: Math.random() * 3 + 2, color: 'blue', size: 20 },
+            { x: 50, y: 150, dx: Math.random() * 3 + 2, dy: Math.random() * 3 + 2, color: 'green', size: 20 }
+        ];
+        const finishLine = { x: 750, y: 300, width: 10, height: 100 };
+        let walls = [];
+        let winner = null;
+
+        // Maps
+        const maps = {
+            map1: [
+                { x: 200, y: 0, width: 20, height: 300 },
+                { x: 400, y: 300, width: 20, height: 300 },
+                { x: 600, y: 0, width: 20, height: 300 }
+            ],
+            map2: [
+                { x: 150, y: 200, width: 300, height: 20 },
+                { x: 500, y: 200, width: 150, height: 20 },
+                { x: 300, y: 400, width: 200, height: 20 }
+            ],
+            map3: [
+                { x: 100, y: 100, width: 20, height: 400 },
+                { x: 300, y: 0, width: 20, height: 200 },
+                { x: 500, y: 400, width: 20, height: 200 },
+                { x: 400, y: 300, width: 100, height: 20 }
+            ],
+            map4: [
+                { x: 200, y: 0, width: 20, height: 250 },
+                { x: 200, y: 350, width: 20, height: 250 },
+                { x: 400, y: 200, width: 200, height: 20 },
+                { x: 600, y: 0, width: 20, height: 400 }
+            ],
+            map5: [
+                { x: 200, y: 100, width: 20, height: 400, dx: 0, dy: 2 },
+                { x: 400, y: 0, width: 20, height: 300, dx: 0, dy: -2 },
+                { x: 600, y: 200, width: 20, height: 300, dx: 0, dy: 1 },
+                { x: 300, y: 400, width: 200, height: 20 }
+            ]
+        };
+
+        function loadMap(mapName) {
+            walls = maps[mapName].map(wall => ({ ...wall }));
+            resetGame();
+        }
+
+        function resetGame() {
+            players.forEach((p, i) => {
+                p.x = 50;
+                p.y = 50 + i * 50;
+                p.dx = Math.random() * 3 + 2;
+                p.dy = Math.random() * 3 + 2;
+            });
+            winner = null;
+        }
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.size > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.size > rect2.y;
+        }
+
+        function update() {
+            if (winner) return;
+
+            // Update moving walls (Map 5)
+            walls.forEach(wall => {
+                if (wall.dy) {
+                    wall.y += wall.dy;
+                    if (wall.y <= 0 || wall.y + wall.height >= canvas.height) wall.dy *= -1;
+                }
+            });
+
+            players.forEach(player => {
+                player.x += player.dx;
+                player.y += player.dy;
+
+                // Wall collision
+                if (player.x <= 0 || player.x + player.size >= canvas.width) player.dx *= -1;
+                if (player.y <= 0 || player.y + player.size >= canvas.height) player.dy *= -1;
+
+                // Obstacle collision
+                walls.forEach(wall => {
+                    if (checkCollision(player, wall)) {
+                        if (player.x < wall.x) player.dx = -Math.abs(player.dx);
+                        else if (player.x + player.size > wall.x + wall.width) player.dx = Math.abs(player.dx);
+                        if (player.y < wall.y) player.dy = -Math.abs(player.dy);
+                        else if (player.y + player.size > wall.y + wall.height) player.dy = Math.abs(player.dy);
+                    }
+                });
+
+                // Finish line check
+                if (checkCollision(player, finishLine)) {
+                    winner = player.color;
+                }
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw walls
+            ctx.fillStyle = 'gray';
+            walls.forEach(wall => ctx.fillRect(wall.x, wall.y, wall.width, wall.height));
+
+            // Draw finish line
+            ctx.fillStyle = 'yellow';
+            ctx.fillRect(finishLine.x, finishLine.y, finishLine.width, finishLine.height);
+
+            // Draw players
+            players.forEach(player => {
+                ctx.fillStyle = player.color;
+                ctx.fillRect(player.x, player.y, player.size, player.size);
+            });
+
+            // Draw winner
+            if (winner) {
+                ctx.fillStyle = 'black';
+                ctx.font = '40px monospace';
+                ctx.fillText(`${winner.toUpperCase()} WINS!`, canvas.width / 2 - 100, canvas.height / 2);
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Event listeners
+        document.getElementById('dark_mode_button').addEventListener('click', () => {
+            document.body.classList.toggle('dark_mode');
+        });
+        document.getElementById('map1Btn').addEventListener('click', () => loadMap('map1'));
+        document.getElementById('map2Btn').addEventListener('click', () => loadMap('map2'));
+        document.getElementById('map3Btn').addEventListener('click', () => loadMap('map3'));
+        document.getElementById('map4Btn').addEventListener('click', () => loadMap('map4'));
+        document.getElementById('map5Btn').addEventListener('click', () => loadMap('map5'));
+        document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+        // Start with Map 1
+        loadMap('map1');
+        gameLoop();
+    </script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaosCode Obstacle Course</title>
+    <style>
+        :root {
+            --primary-color: rgb(224, 224, 224);
+            --secondary-color: black;
+        }
+        .dark_mode {
+            --primary-color: #181818;
+            --secondary-color: rgb(199, 199, 199);
+        }
+        body {
+            background-color: var(--primary-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .content {
+            flex: 1;
+            padding-top: 100px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .überschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 80px;
+            font-family: monospace;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .welcome {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 70px;
+            font-family: monospace;
+            animation: pulseText 3s infinite ease-in-out;
+        }
+        @keyframes pulseText {
+            0%, 100% { text-shadow: 0 0 5px rgba(0, 0, 0, 0.1); }
+            50% { text-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
+        }
+        .unterschrift {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 40px;
+            font-family: monospace;
+            max-width: 800px;
+            margin: 20px auto;
+            line-height: 1.5;
+        }
+        .hover {
+            width: 170px;
+            height: 70px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .hover:hover {
+            width: 190px;
+            height: 70px;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        #gameCanvas {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+        }
+        .dark_mode #gameCanvas {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        #gameCanvas:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .score {
+            font-size: 24px;
+            color: var(--secondary-color);
+            font-family: monospace;
+            margin: 20px 0;
+        }
+        .restart-btn {
+            width: 200px;
+            height: 60px;
+            border-radius: 100px;
+            background-color: var(--secondary-color);
+            font-size: 16px;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        footer {
+            background-color: #181818;
+            padding: 20px;
+            text-align: center;
+        }
+        .footerBottom p {
+            color: white;
+            margin: 0;
+        }
+        .designer {
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+        .dark-mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+        .dark_mode .dark-mode-header {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+        .header-logo {
+            font-size: 24px;
+            color: var(--secondary-color);
+            font-family: monospace;
+            font-weight: bold;
+        }
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            position: relative;
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding-bottom: 5px;
+        }
+        nav ul li a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease-in-out;
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .dark_mode nav ul li a::after {
+            background-color: #ffffff;
+        }
+        .menu-icon {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .menu-icon div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dark-mode-header {
+                padding: 10px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .menu-icon {
+                display: flex;
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 20px 0;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            nav ul li {
+                margin: 10px 0;
+                text-align: center;
+            }
+            .überschrift {
+                font-size: 50px;
+            }
+            .welcome {
+                font-size: 40px;
+            }
+            .unterschrift {
+                font-size: 24px;
+            }
+            #gameCanvas {
+                width: 100%;
+                height: 300px;
+            }
+            .hover {
+                width: 140px;
+                height: 60px;
+                font-size: 14px;
+            }
+            .hover:hover {
+                width: 150px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .überschrift {
+                font-size: 40px;
+            }
+            .welcome {
+                font-size: 30px;
+            }
+            .unterschrift {
+                font-size: 18px;
+            }
+            #gameCanvas {
+                width: 100%;
+                height: 250px;
+            }
+            .hover {
+                width: 120px;
+                height: 50px;
+                font-size: 12px;
+            }
+            .hover:hover {
+                width: 130px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dark-mode-header">
+        <h2 class="header-logo">ChaosCode Obstacle Course</h2>
+        <nav>
+            <div class="menu-icon" id="menuIcon">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="chaoscode.html">Home</a></li>
+                <li><a href="#">wiki</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <div class="content">
+        <h1 class="überschrift">Obstacle Course</h1>
+        <h1 class="welcome">ChaosCode Run</h1>
+        <h2 class="unterschrift">Jump over the spikes to survive! Press Space to jump.</h2>
+        <div class="game-container">
+            <canvas id="gameCanvas" width="800" height="400"></canvas>
+            <div class="score">Score: <span id="score">0</span></div>
+            <button class="restart-btn" id="restartBtn" disabled>Restart Game</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright ©2025; Designed and developered by <span class="designer">GAMELION_</span> and <span class="designer">Gaming_Maker</span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        // Menu toggle for mobile
+        const menuIcon = document.getElementById('menuIcon');
+        const navLinks = document.getElementById('navLinks');
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const isActive = navLinks.classList.contains('active');
+            menuIcon.children[0].style.transform = isActive ? 'rotate(45deg) translate(5px, 5px)' : 'none';
+            menuIcon.children[1].style.opacity = isActive ? '0' : '1';
+            menuIcon.children[2].style.transform = isActive ? 'rotate(-45deg) translate(8px, -8px)' : 'none';
+        });
+
+        // Game logic
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score');
+        const restartBtn = document.getElementById('restartBtn');
+
+        let player = {
+            x: 50,
+            y: canvas.height - 50,
+            width: 30,
+            height: 30,
+            velocityY: 0,
+            jumping: false
+        };
+
+        let groundSpikes = [];
+        let score = 0;
+        let gameOver = false;
+        const gravity = 0.8; // Slightly increased gravity for faster gameplay
+        const jumpPower = -14; // Slightly higher jump to match faster pace
+        let obstacleSpeed = 8; // Much faster starting speed
+        let frameCount = 0;
+        let nextSpikeSpawn = 0;
+
+        // Jump on spacebar press
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !player.jumping && !gameOver) {
+                player.velocityY = jumpPower;
+                player.jumping = true;
+            }
+        });
+
+        // Spawn ground spikes at irregular intervals
+        function spawnGroundSpike() {
+            groundSpikes.push({
+                x: canvas.width,
+                y: canvas.height - 30,
+                width: 20,
+                height: 30
+            });
+            // Random interval between 20 and 60 frames for more frequent spawns
+            nextSpikeSpawn = frameCount + Math.floor(Math.random() * 40) + 20;
+        }
+
+        // Draw spikes as triangles
+        function drawSpike(spike) {
+            ctx.fillStyle = 'green';
+            ctx.beginPath();
+            ctx.moveTo(spike.x, spike.y + spike.height);
+            ctx.lineTo(spike.x + spike.width / 2, spike.y);
+            ctx.lineTo(spike.x + spike.width, spike.y + spike.height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Check collision with ground spikes
+        function checkCollision() {
+            for (let spike of groundSpikes) {
+                if (
+                    player.x + player.width > spike.x &&
+                    player.x < spike.x + spike.width &&
+                    player.y + player.height > spike.y &&
+                    player.y < spike.y + spike.height
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Game loop
+        function gameLoop() {
+            if (gameOver) return;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw ground
+            ctx.fillStyle = '#555';
+            ctx.fillRect(0, canvas.height - 10, canvas.width, 10);
+
+            // Update and draw player
+            player.velocityY += gravity;
+            player.y += player.velocityY;
+
+            if (player.y > canvas.height - 50) {
+                player.y = canvas.height - 50;
+                player.velocityY = 0;
+                player.jumping = false;
+            }
+
+            ctx.fillStyle = 'red';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Spawn ground spikes at irregular intervals
+            if (frameCount >= nextSpikeSpawn) {
+                spawnGroundSpike();
+            }
+
+            // Update and draw ground spikes
+            for (let i = groundSpikes.length - 1; i >= 0; i--) {
+                let spike = groundSpikes[i];
+                spike.x -= obstacleSpeed;
+
+                drawSpike(spike);
+
+                if (spike.x + spike.width < 0) {
+                    groundSpikes.splice(i, 1);
+                }
+            }
+
+            // Increase difficulty over time
+            if (frameCount % 300 === 0) {
+                obstacleSpeed += 1; // Increase speed more frequently
+            }
+
+            // Check for collision
+            if (checkCollision()) {
+                gameOver = true;
+                restartBtn.disabled = false;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = '30px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2);
+                ctx.fillText(`Score: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
+                return;
+            }
+
+            // Update score
+            score++;
+            scoreDisplay.textContent = score;
+
+            frameCount++;
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Restart game
+        restartBtn.addEventListener('click', () => {
+            player.y = canvas.height - 50;
+            player.velocityY = 0;
+            player.jumping = false;
+            groundSpikes = [];
+            score = 0;
+            frameCount = 0;
+            obstacleSpeed = 8;
+            nextSpikeSpawn = 0;
+            gameOver = false;
+            scoreDisplay.textContent = score;
+            restartBtn.disabled = true;
+            gameLoop();
+        });
+
+        // Start the game
+        gameLoop();
+    </script>
+</body>
+</html>

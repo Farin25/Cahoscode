@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChaosCode - Chaos Gravity Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button class="hover" id="dark_mode_button">Change theme</button>
+    <div class="content">
+        <h1 class="überschrift">Chaos Gravity Simulator</h1>
+        <h2 class="unterschrift">Unleash infinite chaos!</h2>
+        <canvas id="gravityCanvas" width="800" height="400"></canvas>
+        <button id="clear-btn" onclick="clearBalls()">Clear All</button>
+    </div>
+    <footer>
+        <div class="footerBottom">
+            <p>Copyright ©2025; Designed by <span class="designer">GAMELION_</span>and<span class="designer">Gaming_Maker</span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector(".hover").addEventListener("click", () => {
+            document.body.classList.toggle("dark_mode");
+        });
+
+        const canvas = document.getElementById("gravityCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const balls = [];
+        const gravity = 0.2;
+        const bounce = 0.8;
+        const friction = 0.99; // Reibung für realistischere Kollisionen
+        let spawning = true;
+
+        class Ball {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = 0;
+                this.vx = Math.random() * 4 - 2;
+                this.vy = 0;
+                this.radius = 10;
+                this.mass = 10; // Für Kollisionsphysik
+                this.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            }
+
+            update() {
+                this.vy += gravity;
+                this.vx *= friction;
+                this.vy *= friction;
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Wand-Kollisionen
+                if (this.y + this.radius > canvas.height) {
+                    this.y = canvas.height - this.radius;
+                    this.vy *= -bounce;
+                }
+                if (this.x + this.radius > canvas.width) {
+                    this.x = canvas.width - this.radius;
+                    this.vx *= -bounce;
+                }
+                if (this.x - this.radius < 0) {
+                    this.x = this.radius;
+                    this.vx *= -bounce;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function checkCollision(ball1, ball2) {
+            const dx = ball2.x - ball1.x;
+            const dy = ball2.y - ball1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < ball1.radius + ball2.radius) {
+                // Normalisierte Richtung der Kollision
+                const nx = dx / distance;
+                const ny = dy / distance;
+
+                // Relative Geschwindigkeit
+                const relativeVx = ball2.vx - ball1.vx;
+                const relativeVy = ball2.vy - ball1.vy;
+
+                // Skalarprodukt der relativen Geschwindigkeit mit der Normalen
+                const impulse = 2 * (relativeVx * nx + relativeVy * ny) / (ball1.mass + ball2.mass);
+
+                // Geschwindigkeiten nach Kollision aktualisieren
+                ball1.vx += impulse * ball2.mass * nx;
+                ball1.vy += impulse * ball2.mass * ny;
+                ball2.vx -= impulse * ball1.mass * nx;
+                ball2.vy -= impulse * ball1.mass * ny;
+
+                // Bälle auseinander bewegen, um Überlappung zu vermeiden
+                const overlap = (ball1.radius + ball2.radius) - distance;
+                ball1.x -= overlap * nx * 0.5;
+                ball1.y -= overlap * ny * 0.5;
+                ball2.x += overlap * nx * 0.5;
+                ball2.y += overlap * ny * 0.5;
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Kollisionsprüfung für alle Ball-Paare
+            for (let i = 0; i < balls.length; i++) {
+                for (let j = i + 1; j < balls.length; j++) {
+                    checkCollision(balls[i], balls[j]);
+                }
+            }
+
+            balls.forEach(ball => {
+                ball.update();
+                ball.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        setInterval(() => {
+            if (spawning) {
+                balls.push(new Ball());
+            }
+        }, 70);
+
+        function clearBalls() {
+            balls.length = 0;
+            spawning = false;
+            setTimeout(() => spawning = true, 1000);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
